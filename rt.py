@@ -4,7 +4,17 @@ from vec3 import *
 from ray import *
 import pdb
 
+def ray_hits_sphere(ray, center, radius):
+    oc = ray.origin - center
+    a = dot(ray.direction, ray.direction)
+    b = 2.0 * dot(oc, ray.direction)
+    c = dot(oc, oc) - radius * radius
+    return b*b - 4 *a*c > 0
+
+
 def color(ray):
+    if ray_hits_sphere(ray, Vec3(0, 0, -1), 0.5):
+        return Vec3(1, 0, 0)
     ray_hat = hat(ray.direction)
     t = 0.5 * (ray_hat.y + 1.0)
     return (1 - t) * Vec3(1, 1, 1) + t * Vec3(0.5, 0.7, 1.0)
