@@ -2,6 +2,8 @@
 from __future__ import division
 from vec3 import *
 from ray import *
+import math
+import sys
 import pdb
 
 def ray_hits_sphere(ray, center, radius):
@@ -9,15 +11,20 @@ def ray_hits_sphere(ray, center, radius):
     a = dot(ray.direction, ray.direction)
     b = 2.0 * dot(oc, ray.direction)
     c = dot(oc, oc) - radius * radius
-    return b*b - 4 *a*c > 0
-
+    delta = b*b - 4 *a*c > 0
+    if delta <= 0:
+        return -1
+    else:
+        return (-b - math.sqrt(delta)) / (2.0 * a)
 
 def color(ray):
-    if ray_hits_sphere(ray, Vec3(0, 0, -1), 0.5):
-        return Vec3(1, 0, 0)
+    t = ray_hits_sphere(ray, Vec3(0, 0, -1), 0.5)
+    if t > 0:
+        N_hat = hat(ray.getpoint(t) - Vec3(0, 0, -1))
+        return 0.5 * (N_hat + Vec3(1, 1, 1))
     ray_hat = hat(ray.direction)
     t = 0.5 * (ray_hat.y + 1.0)
-    return (1 - t) * Vec3(1, 1, 1) + t * Vec3(0.5, 0.7, 1.0)
+    return (1 - t) * Vec3(1, 1, 1) + t * Vec3(0.5, 0.7, 1)
 
 if __name__ == '__main__':
     width, height = 200, 100
