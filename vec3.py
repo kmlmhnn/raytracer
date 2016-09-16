@@ -31,24 +31,24 @@ class Vec3:
 
     def __imul__(self, other):
         try:
-            self.x *= other
-            self.y *= other
-            self.z *= other
-        except TypeError:
             self.x *= other.x
             self.y *= other.y
             self.z *= other.z
+        except:
+            self.x *= other
+            self.y *= other
+            self.z *= other
         return self
 
     def __itruediv__(self, other):
         try:
-            self.x /= other
-            self.y /= other
-            self.z /= other
-        except TypeError:
             self.x /= other.x
             self.y /= other.y
             self.z /= other.z
+        except:
+            self.x /= other
+            self.y /= other
+            self.z /= other
         return self
 
     def __add__(self, other):
@@ -60,13 +60,16 @@ class Vec3:
     def __mul__(self, other):
         try:
             return Vec3(self.x * other, self.y * other, self.z * other)
-        except TypeError:
+        except:
             return Vec3(self.x * other.x, self.y * other.y, self.z * other.z)
+
+    def __rmul__(self, other):
+        return self.__mul__(other)
 
     def __truediv__(self, other):
         try:
             return Vec3(self.x / other, self.y / other, self.z / other)
-        except TypeError:
+        except:
             return Vec3(self.x / other.x, self.y / other.y, self.z / other.z)
 
 def dot(a, b):
