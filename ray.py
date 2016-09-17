@@ -1,6 +1,6 @@
 from vec3 import *
 
-class Ray:
+class Ray(object):
     def __init__(self, a=Vec3(0, 0, 0), b=Vec3(1, 0, 0)):
         self.origin = a
         self.direction = b
