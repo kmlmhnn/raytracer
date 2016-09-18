@@ -9,12 +9,21 @@ from hitable import *
 from hitables import *
 from sphere import *
 from camera import *
-import random
+from random import random, seed
+
+def random_vector():
+    p = 2.0 * Vec3(random(), random(), random()) - Vec3(1, 1, 1)
+    while dot(p, p) >= 1.0:
+        p = 2.0 * Vec3(random(), random(), random()) - Vec3(1, 1, 1)
+    return p
+
 
 def color(ray, world):
     hit_record = {}
     if world.hit(ray, 0.0, 1024.0, hit_record):
-        return 0.5 * (hit_record['N'] + Vec3(1, 1, 1))
+        target = hit_record['p'] + hit_record['N'] + random_vector()
+        return 0.5*color(Ray(hit_record['p'], target-hit_record['p']),
+            world)
     else:
         ray_hat = hat(ray.direction)
         t = 0.5 * (ray_hat.y + 1.0)
@@ -24,8 +33,8 @@ def color(ray, world):
 if __name__ == '__main__':
     width, height = 200, 100
     maxcolors = 255
-    samples = 10   # set it to 100 for high quality images
-    random.seed()
+    samples = 25   # set it to 100 for high quality images
+    seed()
 
     print "P3"
     print width, height
@@ -38,7 +47,7 @@ if __name__ == '__main__':
 
     camera = Camera()
 
-    for y in range(height):
+    for y in range(height-1, 0, -1):
         for x in range(width):
             # u, v = x / width, y / height
             # ray = Ray(origin,
@@ -46,8 +55,8 @@ if __name__ == '__main__':
             # col = color(ray, world) * maxcolors
             col = Vec3(0, 0, 0)
             for s in range(samples):
-                u = (x + random.random()) / width
-                v = (y + random.random()) / height
+                u = (x + random()) / width
+                v = (y + random()) / height
                 ray = camera.getray(u, v)
                 col += color(ray, world)
             col = col * maxcolors / samples
