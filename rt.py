@@ -8,6 +8,8 @@ import pdb
 from hitable import *
 from hitables import *
 from sphere import *
+from camera import *
+import random
 
 def color(ray, world):
     hit_record = {}
@@ -22,12 +24,9 @@ def color(ray, world):
 if __name__ == '__main__':
     width, height = 200, 100
     maxcolors = 255
+    samples = 10   # set it to 100 for high quality images
+    random.seed()
 
-    lower_left_corner = Vec3(-2, -1, -1) 
-    horizontal = Vec3(4, 0, 0)
-    vertical = Vec3(0, 2, 0)
-    origin = Vec3(0, 0, 0)
-    
     print "P3"
     print width, height
     print maxcolors
@@ -37,12 +36,21 @@ if __name__ == '__main__':
         Sphere(Vec3(0, -100.5, -1), 100)
     ])
 
+    camera = Camera()
+
     for y in range(height):
         for x in range(width):
-            u, v = x / width, y / height
-            ray = Ray(origin,
-                    lower_left_corner + u*horizontal + v*vertical)
-            col = color(ray, world) * maxcolors
+            # u, v = x / width, y / height
+            # ray = Ray(origin,
+                    # lower_left_corner + u*horizontal + v*vertical)
+            # col = color(ray, world) * maxcolors
+            col = Vec3(0, 0, 0)
+            for s in range(samples):
+                u = (x + random.random()) / width
+                v = (y + random.random()) / height
+                ray = camera.getray(u, v)
+                col += color(ray, world)
+            col = col * maxcolors / samples
             print int(col.x), int(col.y), int(col.z)
 
 
