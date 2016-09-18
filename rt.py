@@ -33,7 +33,7 @@ def color(ray, world):
 if __name__ == '__main__':
     width, height = 200, 100
     maxcolors = 255
-    samples = 25   # set it to 100 for high quality images
+    samples = 50   # set it to 100 for high quality images
     seed()
 
     print "P3"
@@ -49,17 +49,15 @@ if __name__ == '__main__':
 
     for y in range(height-1, 0, -1):
         for x in range(width):
-            # u, v = x / width, y / height
-            # ray = Ray(origin,
-                    # lower_left_corner + u*horizontal + v*vertical)
-            # col = color(ray, world) * maxcolors
             col = Vec3(0, 0, 0)
             for s in range(samples):
                 u = (x + random()) / width
                 v = (y + random()) / height
                 ray = camera.getray(u, v)
                 col += color(ray, world)
-            col = col * maxcolors / samples
+            col /= samples
+            col = Vec3(math.sqrt(col.x), math.sqrt(col.y), math.sqrt(col.z))
+            col *= maxcolors
             print int(col.x), int(col.y), int(col.z)
 
 
